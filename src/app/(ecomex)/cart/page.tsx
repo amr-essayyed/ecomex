@@ -1,25 +1,32 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { CartItem } from "@/lib/cart";
 
 export default function Cart() {
-  // Mock cart data - in a real app, this would come from state management or API
-  const [cartItems, setCartItems] = useState<CartItem[]>(localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')!) : []);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const storedCart = localStorage.getItem('cart');
+    const storedCart = localStorage.getItem("cart");
     if (storedCart) {
-      setCartItems(JSON.parse(storedCart));
+      try {
+        setCartItems(JSON.parse(storedCart));
+      } catch (error) {
+        console.error("Failed to parse cart data:", error);
+        localStorage.removeItem("cart");
+      }
     }
+    setIsLoaded(true);
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cartItems));
-  }, [cartItems]);
+    if (isLoaded) {
+      localStorage.setItem("cart", JSON.stringify(cartItems));
+    }
+  }, [cartItems, isLoaded]);
 
   const updateQuantity = (id: string, newQuantity: number) => {
     if (newQuantity <= 0) {
