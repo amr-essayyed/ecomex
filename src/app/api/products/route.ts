@@ -1,7 +1,9 @@
-import Product from "@/db/products/model";
+import Product from "@/model/products/model";
 import connect from "@/lib/db";
 import { NextResponse } from "next/server";
 import { ObjectId, Types } from "mongoose";
+import { productPostSchema } from "@/model/products/zod-schema";
+import { treeifyError } from "zod";
 
 export async function GET() {
     try {
@@ -18,7 +20,16 @@ export async function POST(request: Request){
     
     try {
         const body = await request.json();
+
+        // validate body
+        const validation = productPostSchema.safeParse(body);
+        if(!validation.success) {
+            return new NextResponse(JSON.stringify(treeifyError(validation.error)), {status:400})
+        }
+
         await connect();
+        
+        // sotre new resource
         const newProduct = await new Product(body);
         await newProduct.save();
 
@@ -31,18 +42,5 @@ export async function POST(request: Request){
         )
     } catch (err: any) {
         return new NextResponse("could not insert the product" + err.message, {status: 500})
-    }
-}
-
-export async function PATCH(request:Request) {
-    try {
-        const body = await request.json();
-        const {productId} = body;
-        await connect();
-        if (!Types.ObjectId.isValid(productId)) {
-            return new NextResponse("invalid product id", {status: 400})
-        }
-    } catch (err: any) {
-
     }
 }
