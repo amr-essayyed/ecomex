@@ -1,7 +1,6 @@
 "use client";
 import React, { use, useEffect, useState } from "react";
 import { notFound, useParams } from "next/navigation";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/model/products/zod-schema";
 import { addCartItem } from "@/lib/cart";

@@ -22,10 +22,10 @@ export default function connect () {
         });
         console.log("connected");
         
-    } catch (err: any) {
+    } catch (err: unknown) {
         console.log("Error: ", err);
-        throw new Error(err)
-        
+        throw new Error(String(err))
+
     }
 
 

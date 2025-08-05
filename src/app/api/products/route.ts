@@ -1,7 +1,6 @@
 import Product from "@/model/products/model";
 import connect from "@/lib/db";
 import { NextResponse } from "next/server";
-import { ObjectId, Types } from "mongoose";
 import { productPostSchema } from "@/model/products/zod-schema";
 import { treeifyError } from "zod";
 
@@ -10,9 +9,11 @@ export async function GET() {
         await connect();
         const products = await Product.find();
         return new NextResponse(JSON.stringify(products), {status:200})
-    } catch (err: any) {
-
-        return new NextResponse("could not fetch products" + err.message, {status: 500})
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            return new NextResponse("could not fetch products: " + err.message, {status: 500});
+        }
+        return new NextResponse("could not fetch products" + String(err), {status: 500})
     }
 }
 
@@ -40,7 +41,8 @@ export async function POST(request: Request){
                 data: newProduct,
             }, {status: 200}
         )
-    } catch (err: any) {
-        return new NextResponse("could not insert the product" + err.message, {status: 500})
+    } catch (err: unknown) {
+        const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+        return new NextResponse("could not insert the product: " + errorMessage, {status: 500})
     }
 }

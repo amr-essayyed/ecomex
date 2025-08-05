@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Product } from "@/model/products/zod-schema";
 import { CartItem } from "@/lib/cart";
 
 export default function Cart() {

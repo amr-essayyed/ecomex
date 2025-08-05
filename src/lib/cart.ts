@@ -8,7 +8,7 @@ export type CartItem = Product & {
 export function addCartItem(item: Product) {
   const key = 'cart';
   const stored = localStorage.getItem(key);
-  let cart: CartItem[] = stored ? JSON.parse(stored) : [];
+  const cart: CartItem[] = stored ? JSON.parse(stored) : [];
 
   const index = cart.findIndex((i) => i._id === item._id);
   if (index !== -1) {

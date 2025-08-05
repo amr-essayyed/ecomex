@@ -23,7 +23,8 @@ export async function GET() {
     try {
         await Product.insertMany(products);
         return new NextResponse("Seeded 1000 products!", { status: 200 });
-    } catch (err: any) {
-        return new NextResponse("could not seed products" + err.message, { status: 500 });
+    } catch (err: unknown) {
+        const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+        return new NextResponse("could not seed products: " + errorMessage, { status: 500 });
     }
 }
