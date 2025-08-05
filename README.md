@@ -1,5 +1,7 @@
 # RockAI Task - E-commerce Product Management
 
+Deployed at: https://ecomex-nine.vercel.app/
+
 A modern e-commerce product management system built with Next.js, MongoDB, and TypeScript. This application provides a clean interface for managing products with full CRUD operations and shopping cart functionality.
 
 ## GitHub Repository
